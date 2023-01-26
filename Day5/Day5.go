@@ -17,7 +17,6 @@ func main() {
 	partOne(steps, myStacks)
 	myStacks = getInput()
 	PartTwo(steps, myStacks)
-
 }
 
 func getInput() [][]string {
@@ -48,12 +47,13 @@ func getSteps() []step {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		currentMoveSet := scanner.Text()
-		var s string
 		var currentStep step
-		_, err := fmt.Sscanf(currentMoveSet, "%s %d %s %d %s %d", &s, &currentStep.moves, &s, &currentStep.from, &s, &currentStep.to)
+		_, err := fmt.Sscanf(currentMoveSet, "move %d from %d to %d", &currentStep.moves, &currentStep.from, &currentStep.to)
 		if err != nil {
 			fmt.Printf("Error parsing moves %s\n", err)
 		}
+
+		//Decrease from and two by one because our data structure is indexed at 0
 		currentStep.from--
 		currentStep.to--
 		steps = append(steps, currentStep)
@@ -71,6 +71,7 @@ func partOne(steps []step, myStacks [][]string) {
 		}
 	}
 
+	//Print the value of the top layer of each stack
 	for _, stack := range myStacks {
 		fmt.Printf("%s", stack[len(stack)-1])
 	}
@@ -83,10 +84,11 @@ func PartTwo(steps []step, myStacks [][]string) {
 			lastElementInFrom := myStacks[step.from][len(myStacks[step.from])-(i)]
 			myStacks[step.to] = append(myStacks[step.to], lastElementInFrom)
 		}
-		myStacks[step.from] = myStacks[step.from][:len(myStacks[step.from])-(step.moves)]
+		myStacks[step.from] = myStacks[step.from][:len(myStacks[step.from])-step.moves]
 
 	}
 
+	//Print the value of the top layer of each stack
 	for _, stack := range myStacks {
 		fmt.Printf("%s", stack[len(stack)-1])
 	}
